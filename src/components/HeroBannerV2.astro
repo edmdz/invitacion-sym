@@ -1,0 +1,143 @@
+---
+interface Props {
+  background: string;
+  dateISO: string;
+  day: string;
+  month: string;
+  year: string;
+}
+const { background, dateISO, day, month, year } = Astro.props;
+---
+
+<section class="hero-v2" style={`background-image: url(${background})`}>
+  <div class="overlay"></div>
+  <div class="content">
+    
+    <div class="large-date">
+      <span class="date-number">{day}</span>
+      <span class="date-month">{month}</span>
+      <span class="date-number">{year}</span>
+    </div>
+
+    <div class="countdown">
+      <div class="box"><span id="dias-v2">00</span><small>DÍAS</small></div>
+      <span class="sep">:</span>
+      <div class="box"><span id="horas-v2">00</span><small>HORAS</small></div>
+      <span class="sep">:</span>
+      <div class="box"><span id="minutos-v2">00</span><small>MINUTOS</small></div>
+      <span class="sep">:</span>
+      <div class="box"><span id="segundos-v2">00</span><small>SEGUNDOS</small></div>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ dateISO }}>
+  // El script no necesita cambios
+  document.addEventListener('DOMContentLoaded', () => {
+    const target = new Date(dateISO).getTime();
+    if (isNaN(target)) { console.error("Fecha inválida:", dateISO); return; }
+    const dEl = document.getElementById('dias-v2'), hEl = document.getElementById('horas-v2'),
+          mEl = document.getElementById('minutos-v2'), sEl = document.getElementById('segundos-v2'),
+          countdownEl = document.getElementById('countdown-v2');
+    const pad = (n) => String(n).padStart(2, '0');
+    const timer = setInterval(() => {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        clearInterval(timer);
+        if (countdownEl) countdownEl.innerHTML = "<p>¡El gran día llegó!</p>";
+        return;
+      }
+      const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000),
+            m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+      if (dEl) dEl.textContent = pad(d); if (hEl) hEl.textContent = pad(h);
+      if (mEl) mEl.textContent = pad(m); if (sEl) sEl.textContent = pad(s);
+    }, 1000);
+  });
+</script>
+
+<style>
+  .hero-v2 {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    isolation: isolate;
+    background-size: cover;
+    background-position: center;
+    color: var(--white);
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55));
+    z-index: -1;
+  }
+
+  .content {
+    width: 100%;
+    /* CORRECCIÓN: Eliminamos el padding horizontal que causaba el desbordamiento */
+    padding: 20px 0;
+  }
+
+  /* --- CORRECCIÓN: Estructura de la fecha con Flexbox para alineación perfecta --- */
+  .large-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra horizontalmente cada línea */
+    font-family: var(--font-serif);
+    font-weight: 600;
+  }
+
+  .date-number {
+    font-size: clamp(7rem, 25vw, 13rem);
+    line-height: 0.85; /* Reduce la altura de línea para juntar los elementos */
+  }
+  
+  .date-month {
+    font-size: clamp(5rem, 20vw, 6rem);
+    letter-spacing: 0.1em;
+    /* CORRECCIÓN: Espaciado simétrico arriba y abajo */
+    margin-top: 0.3em;
+    line-height: 1;
+  }
+  /* -------------------------------------------------------------------------- */
+
+  .countdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2.5vw, 18px);
+    font-family: var(--font-serif);
+    margin-top: clamp(60px, 8vw, 60px);
+  }
+
+  .sep {
+    font-size: 2rem;
+    opacity: 0.7;
+  }
+
+  .box {
+    min-width: clamp(64px, 16vw, 90px);
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 14px;
+  }
+
+  .box span {
+    display: block;
+    font-size: clamp(2rem, 6vw, 2.8rem);
+    font-weight: 600;
+  }
+
+  .box small {
+    display: block;
+    margin-top: 4px;
+    font-size: clamp(10px, 2.4vw, 12px);
+    letter-spacing: .08em;
+    opacity: .8;
+    text-transform: uppercase;
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+import LocationCard from './LocationCard.astro';
+
+// Datos de los eventos
+const ceremony = {
+  // Si no quieres imagen para la ceremonia, simplemente borra la siguiente línea
+  title: "Ceremonia",
+  locationName: "Iglesia Evangélica Cristiana Espiritual",
+  time: "3:00 PM",
+  address: "C. Lerdo de Tejada #903, Col. Obrera, Tampico, Tamps.",
+  mapUrl: "https://maps.app.goo.gl/PvFJJsZoFkuYUds37"
+};
+
+const reception = {
+  // Por ejemplo, si la recepción no tuviera imagen, borrarías la línea "imageSrc"
+  title: "Recepción",
+  locationName: "Salón Señorial",
+  time: "5:30 PM",
+  address: "Ave. Álvaro Obregón #616, Col. Primero de Mayo, Cd. Madero, Tamps.",
+  mapUrl: "https://maps.app.goo.gl/9FJBUTAFF4ThwdYq9"
+};
+---
+
+<section class="events-section">
+  <div class="container">
+    <LocationCard {...ceremony} />
+    <LocationCard {...reception} />
+  </div>
+</section>
+
+<style>
+  .events-section {
+    padding: 60px 20px;
+    background-color: #F8F4F0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas se ajusten en pantallas pequeñas */
+    justify-content: center;
+    gap: 50px; /* Espacio entre las tarjetas */
+    width: 100%;
+    max-width: 900px; /* Límite para que no se separen demasiado en pantallas anchas */
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+interface Props {
+  title: string;
+  locationName: string;
+  time: string;
+  address: string;
+  mapUrl: string;
+  imageSrc?: string;
+}
+
+const { imageSrc, title, locationName, time, address, mapUrl } = Astro.props;
+---
+
+<div class="card">
+  {imageSrc && <img src={imageSrc} alt={`Imagen de ${locationName}`} class="card-image" />}
+  
+  <div class="card-content">
+    <h2 class="title">{title}</h2>
+    <p class="location-name">{locationName}</p>
+    <p class="time">{time}</p>
+    <p class="address">{address}</p>
+    <a href={mapUrl} target="_blank" rel="noopener noreferrer" class="map-button">
+      VER MAPA
+    </a>
+  </div>
+</div>
+
+<style>
+
+  .card {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    background-color: var(--white);
+    border: 1px solid var(--sand);
+    font-family: var(--font-serif);
+    color: var(--ink);
+  }
+
+  .card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .card-content {
+    padding: 30px clamp(20px, 5vw, 40px);
+  }
+
+  .title {
+    font-family: var(--font-title-script);
+    color: var(--gold);
+    font-size: clamp(2.6rem, 8vw, 3.5rem);
+    font-weight: 400;
+    margin: 0 0 25px;
+  }
+
+  .location-name, .time, .address {
+    font-size: clamp(1rem, 3vw, 1.1rem);
+    line-height: 1.6;
+    margin: 0 auto 20px;
+    max-width: 35ch;
+  }
+
+  .time {
+    font-weight: 600;
+  }
+  
+  .map-button {
+    display: inline-block;
+    background-color: var(--sand);
+    color: var(--white);
+    font-family: var(--font-sans);
+    padding: 12px 30px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+  }
+
+  .map-button:hover {
+    /* Ajustamos el hover para que oscurezca el nuevo color */
+    background-color: color-mix(in srgb, var(--sand) 85%, black);
+  }
+</style>

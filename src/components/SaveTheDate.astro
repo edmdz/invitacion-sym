@@ -1,0 +1,75 @@
+---
+interface Props {
+  groomName: string;
+  brideName: string;
+  dateText: string;
+  imageSrc1: string;
+  altText1: string;
+  imageSrc2: string; // Vertical
+  altText2: string;
+  imageSrc3: string; // Nueva imagen
+  altText3: string;
+}
+
+const { 
+  groomName, brideName, dateText, 
+  imageSrc1, altText1, 
+  imageSrc2, altText2,
+  imageSrc3, altText3 
+} = Astro.props;
+---
+
+<section class="save-the-date-section">
+  <div class="content-wrapper">
+    <h2 class="title">SAVE THE DATE</h2>
+    <img src={imageSrc1} alt={altText1} class="photo" loading="lazy" />
+    <p class="names">{groomName.toUpperCase()} & {brideName.toUpperCase()}</p>
+    <img src={imageSrc2} alt={altText2} class="photo photo-vertical" loading="lazy" />
+    <p class="date">{dateText}</p>
+    <img src={imageSrc3} alt={altText3} class="photo" loading="lazy" />
+  </div>
+</section>
+
+<style>
+  .save-the-date-section {
+    padding: clamp(40px, 10vw, 80px) 20px;
+    background-color: var(--soft-white);
+  }
+
+  .content-wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .title, .names, .date {
+    font-family: var(--font-serif);
+    color: var(--gold); /* <-- CAMBIO: Usamos el color principal */
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+  }
+
+  .title {
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+  }
+
+  .names, .date {
+    font-size: clamp(1.1rem, 3.5vw, 1.3rem);
+  }
+
+  .photo {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin: 30px 0;
+    background-color: #eee; /* Placeholder color */
+    /* Proporción para imágenes horizontales (factor actual) */
+    aspect-ratio: 3 / 2; 
+  }
+
+  .photo-vertical {
+    /* Proporción específica para la imagen vertical */
+    aspect-ratio: 2 / 3;
+  }
+</style>

@@ -1,0 +1,177 @@
+---
+interface Props {
+    bride: string;
+    groom: string;
+    dateISO: string; // ej: "2025-11-29T18:00:00"
+    background?: string;
+}
+const { bride, groom, dateISO, background = "/img/banner.jpg" } = Astro.props;
+---
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- FUENTE ACTUALIZADA: Imperial Script para los nombres y Playfair Display para el contador -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Imperial+Script&family=Playfair+Display:wght@400;600&display=swap"
+    rel="stylesheet"
+/>
+
+<section class="hero" style={`--bg:url('${background}')`}>
+    <div class="overlay"></div>
+
+    <div class="content">
+        <div class="names-container">
+            <span class="ampersand">&</span>
+            <div class="names">
+                <h1>{bride}</h1>
+                <h1>{groom}</h1>
+            </div>
+        </div>
+
+        <div class="countdown" role="timer" aria-label="Contador para la boda">
+            <div class="box"><span class="d">00</span><small>DÍAS</small></div>
+            <span class="sep">:</span>
+            <div class="box"><span class="h">00</span><small>HORAS</small></div>
+            <span class="sep">:</span>
+            <div class="box">
+                <span class="m">00</span><small>MINUTOS</small>
+            </div>
+            <span class="sep">:</span>
+            <div class="box">
+                <span class="s">00</span><small>SEGUNDOS</small>
+            </div>
+        </div>
+    </div>
+
+    <script is:inline define:vars={{ dateISO }}>
+        const root = document.currentScript.closest(".hero");
+        const dEl = root.querySelector(".d");
+        const hEl = root.querySelector(".h");
+        const mEl = root.querySelector(".m");
+        const sEl = root.querySelector(".s");
+
+        const target = new Date(dateISO).getTime();
+        const pad = (n) => String(n).padStart(2, "0");
+
+        function tick() {
+            if (Number.isNaN(target)) {
+                console.warn("Fecha inválida:", dateISO);
+                return;
+            }
+            let diff = target - Date.now();
+            if (diff <= 0) {
+                dEl.textContent =
+                    hEl.textContent =
+                    mEl.textContent =
+                    sEl.textContent =
+                        "00";
+                clearInterval(timer);
+                return;
+            }
+            const day = 86400000,
+                hour = 3600000,
+                minute = 60000,
+                second = 1000;
+            const d = Math.floor(diff / day);
+            diff %= day;
+            const h = Math.floor(diff / hour);
+            diff %= hour;
+            const m = Math.floor(diff / minute);
+            diff %= minute;
+            const s = Math.floor(diff / second);
+            dEl.textContent = pad(d);
+            hEl.textContent = pad(h);
+            mEl.textContent = pad(m);
+            sEl.textContent = pad(s);
+        }
+        tick();
+        const timer = setInterval(tick, 1000);
+    </script>
+</section>
+
+<style>
+    .hero {
+        position: relative;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        isolation: isolate;
+        background-image: var(--bg);
+        background-size: cover;
+        background-position: center;
+    }
+    .overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            rgba(255, 255, 255, 0.85),
+            rgba(255, 255, 255, 0.85)
+        );
+        z-index: -1;
+    }
+    .content {
+        padding: clamp(16px, 4vw, 48px);
+    }
+
+    /* --- ESTILOS DE NOMBRES ACTUALIZADOS --- */
+    .names-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.6em; /* Mayor separación entre el '&' y los nombres */
+        margin-bottom: 50px;
+    }
+
+    .ampersand {
+        font-family: var(--font-heading); /* Usamos la variable de fuente */
+        font-size: clamp(80px, 18vw, 140px);
+        font-weight: 400;
+        color: var(--sand);
+        line-height: 1;
+    }
+
+    .names h1 {
+        font-family: var(--font-heading); /* Usamos la variable de fuente */
+        font-weight: 400; /* Peso correcto para esta fuente */
+        font-size: clamp(80px, 18vw, 140px); /* Mismo tamaño que el ampersand */
+        line-height: 1.1;
+        margin: 0;
+        color: var(--gold);
+        text-align: left;
+    }
+
+    /* --- ESTILOS DEL CONTADOR (SIN CAMBIOS) --- */
+    .countdown {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(8px, 2vw, 18px);
+        font-family: var(--font-serif); /* Usamos la variable de fuente */
+    }
+    .sep {
+        opacity: 0.55;
+        font-weight: 600;
+    }
+
+    .box {
+        min-width: clamp(64px, 16vw, 110px);
+        padding: clamp(10px, 2.4vw, 16px) clamp(8px, 2.4vw, 16px);
+        border: 1px solid color-mix(in oklab, var(--gold) 40%, #0000);
+        background: color-mix(in oklab, var(--white) 90%, var(--sand));
+        border-radius: 14px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    }
+    .box span {
+        display: block;
+        font-size: clamp(28px, 6vw, 44px);
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .box small {
+        display: block;
+        margin-top: 4px;
+        font-size: clamp(11px, 2.4vw, 13px);
+        letter-spacing: 0.08em;
+        opacity: 0.75;
+    }
+</style>

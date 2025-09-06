@@ -1,0 +1,117 @@
+---
+interface Props {
+  phoneNumber: string;
+}
+const { phoneNumber } = Astro.props;
+---
+
+<section class="rsvp-section">
+  <div class="container">
+    <h2>CONFIRMA TU ASISTENCIA</h2>
+    <form id="rsvp-form">
+      <div class="form-group">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre aquí..." required />
+      </div>
+      <div class="form-group">
+        <label for="mensaje">Un mensajito para los novios (opcional)</label>
+        <textarea id="mensaje" name="mensaje" rows="4" placeholder="Déjanos unas palabras..."></textarea>
+      </div>
+      <button type="submit" class="whatsapp-button">CONFIRMAR</button>
+    </form>
+  </div>
+</section>
+
+<script define:vars={{ phoneNumber }}>
+  // El script no necesita cambios
+  document.getElementById('rsvp-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const nombre = document.getElementById('nombre').value;
+    const mensaje = document.getElementById('mensaje').value;
+    if (!nombre) {
+      alert('Por favor, no olvides escribir tu nombre.');
+      return;
+    }
+    let textoWhatsapp = `¡Hola! Soy ${nombre} y quiero confirmar mi asistencia a su boda. 🎉`;
+    if (mensaje) {
+      textoWhatsapp += `\n\nQuería decirles que: "${mensaje}"`;
+    }
+    const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(textoWhatsapp)}`;
+    window.open(url, '_blank');
+  });
+</script>
+
+<style>
+  .rsvp-section {
+    background-color: var(--soft-white);
+    padding: clamp(40px, 10vw, 80px) 20px;
+    font-family: var(--font-sans);
+  }
+  .container {
+    max-width: 550px;
+    margin: 0 auto;
+  }
+  h2 {
+    font-family: var(--font-serif);
+    text-align: center;
+    font-size: clamp(1.5rem, 5vw, 1.8rem);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin: 0 0 40px;
+    color: var(--gold); /* CAMBIO: Título en color dorado principal */
+    text-transform: uppercase;
+  }
+  .form-group {
+    margin-bottom: 25px;
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--sand);
+    border-radius: 8px;
+    background-color: var(--white);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--ink);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  input[type="text"]:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 20%, transparent);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  .whatsapp-button {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    margin-top: 30px;
+    background-color: var(--gold); /* CAMBIO: Botón en color dorado principal */
+    color: var(--white);           /* CAMBIO: Texto blanco para contraste */
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-align: center;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  .whatsapp-button:hover {
+    background-color: color-mix(in srgb, var(--gold) 85%, black); /* Oscurece el dorado al pasar el cursor */
+    transform: translateY(-2px);
+  }
+</style>
