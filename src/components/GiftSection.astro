@@ -1,33 +1,63 @@
 ---
-// --- La parte superior (script y HTML) no cambia ---
-const registry = {
+// Datos para ambas tarjetas
+const registryData = {
   storeName: "Liverpool",
   logoSrc: "/liverpool.png",
   eventNumber: "51747839",
   registryUrl: "https://mesaderegalos.liverpool.com.mx/milistaderegalos/51747839"
 };
+
+const bankData = {
+  accountNumber: "5579 1004 7111 3793",
+  holderName: "Salvador Mata"
+};
 ---
 
 <section class="gift-section">
   <div class="header">
-    {/* <img src="/img/adorno-hojas.svg" alt="Adorno de hojas" class="adorno" /> */}
-    <h2>MESA DE REGALOS</h2>
+    <h2>REGALOS</h2>
     <p>
       El mejor regalo es tu presencia, pero si deseas hacernos llegar un bonito
       detalle lo recibiremos con mucho cariño.
     </p>
   </div>
 
-  <div class="registry-card">
-    <img src={registry.logoSrc} alt={`Logo de ${registry.storeName}`} class="store-logo" />
-    <p class="event-number">NO. DE EVENTO: {registry.eventNumber}</p>
-    <a href={registry.registryUrl} target="_blank" rel="noopener noreferrer" class="registry-button">
-      VER MESA DE REGALOS
-    </a>
+  <div class="cards-container">
+    
+    {/* Tarjeta 1: Mesa de Regalos Liverpool */}
+    <div class="info-card">
+      <img src={registryData.logoSrc} alt={`Logo de ${registryData.storeName}`} class="store-logo" />
+      <p class="event-number">NO. DE EVENTO: {registryData.eventNumber}</p>
+      <a href={registryData.registryUrl} target="_blank" rel="noopener noreferrer" class="registry-button">
+        VER MESA DE REGALOS
+      </a>
+    </div>
+
+    {/* Tarjeta 2: Sobre y Transferencia */}
+    <div class="info-card">
+      <div class="bank-details">
+        <div class="detail-item">
+          <span class="label">NÚMERO DE CUENTA</span>
+          <span class="value">{bankData.accountNumber}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">A NOMBRE DE</span>
+          <span class="value">{bankData.holderName}</span>
+        </div>
+      </div>
+
+      {/* NUEVO: Separador visual */}
+      <hr class="divider" />
+      {/* NUEVO: Sección para el sobre */}
+      <div class="envelope-option">
+        <svg class="envelope-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        <p class="envelope-text">O si lo prefieres, en sobre el día del evento.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
-{/* 👇 REEMPLAZA TU SECCIÓN DE ESTILOS CON ESTA 👇 */}
 <style>
   .gift-section {
     background-color: var(--soft-white);
@@ -42,19 +72,12 @@ const registry = {
     margin: 0 auto 40px auto;
   }
 
-  .adorno {
-    width: 80px;
-    height: auto;
-    margin-bottom: 20px;
-    color: var(--gold);
-  }
-
   .header h2 {
     font-size: clamp(1.5rem, 5vw, 1.8rem);
     font-weight: 600;
     letter-spacing: 0.1em;
     margin: 0 0 20px;
-    color: var(--gold); /* <-- CAMBIO: Título dorado */
+    color: var(--gold);
   }
 
   .header p {
@@ -65,33 +88,44 @@ const registry = {
     margin: 0 auto;
   }
 
-  .registry-card {
+  .cards-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+
+  .info-card {
     background-color: var(--white);
+    width: 100%;
     max-width: 450px;
-    margin: 0 auto;
     padding: 40px 30px;
     border-radius: 4px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 25px; /* Espacio entre los elementos internos de la tarjeta */
   }
 
+  /* --- Estilos para la tarjeta de Liverpool --- */
+  .store-logo, .event-number {
+    margin: 0 auto;
+  }
   .store-logo {
     max-width: 200px;
     height: auto;
-    margin-bottom: 25px;
     filter: brightness(0) saturate(100%);
   }
-
   .event-number {
     font-family: var(--font-sans);
     font-weight: 600;
     letter-spacing: 0.1em;
     font-size: 0.9rem;
-    margin: 0 0 25px;
   }
-
   .registry-button {
-    background-color: var(--sand); /* <-- CAMBIO: Fondo arena */
-    color: var(--ink);             /* <-- CAMBIO: Texto oscuro */
+    background-color: var(--sand);
+    color: var(--ink);
     font-family: var(--font-sans);
     display: inline-block;
     padding: 14px 30px;
@@ -103,10 +137,64 @@ const registry = {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: center; /* Centra el botón si el contenido no llena la tarjeta */
   }
-
   .registry-button:hover {
     background-color: color-mix(in srgb, var(--sand) 85%, black);
     transform: translateY(-2px);
+  }
+
+  /* --- Estilos para la tarjeta de Sobre y Transferencia --- */
+  .envelope-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+  }
+  .envelope-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--gold);
+    stroke-width: 1.5px;
+  }
+  .envelope-text {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+  .divider {
+    border: none;
+    height: 1px;
+    background-color: var(--sand);
+    opacity: 0.6;
+    width: 80%;
+    margin: 0 auto; /* Centra el separador */
+  }
+  .bank-details {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .label {
+    display: block;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    font-size: 0.9rem;
+    color: var(--ink);
+    opacity: 0.7;
+    margin-bottom: 5px;
+  }
+  .value {
+    display: block;
+    font-family: var(--font-sans); 
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--ink);
+    word-break: break-all;
   }
 </style>
